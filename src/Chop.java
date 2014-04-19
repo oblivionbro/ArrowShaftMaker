@@ -48,7 +48,7 @@ public class Chop extends Task{
 		} else { logs = 0; lastCheck = c.backpack.id(logId).count() + 1; logs++; init=true; }
 		
 		GameObject tree = c.objects.nearest().poll();
-		if (tree.inViewport() && tree.id() != 38731) {
+		if (tree.inViewport()) {
             tree.interact("Chop");
             statsWindow.setStatus("Chopping trees.");
             
