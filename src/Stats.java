@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,7 +7,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
 public class Stats extends JFrame {
 
@@ -23,25 +20,30 @@ public class Stats extends JFrame {
 	static double startTime;
 	static public int logs = 0;
 	
+	public Stats(){
+	
+		createWindow();
+	
+	}
+	
     private static void createWindow() {
     	       
        JFrame panel = new JFrame("Arrow Shaft Maker"); 
-       panel.getContentPane().setLayout(
-    		    new BoxLayout(panel.getContentPane(), BoxLayout.Y_AXIS)
-    		);       
-       panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       panel.getContentPane().setLayout( new BoxLayout(panel.getContentPane(), BoxLayout.Y_AXIS) );        
 
-       label = new JLabel("<html><center>You've chopped 0 logs so far<br>That's 0 arrow shafts</center></html>");
+       label = new JLabel("<html><div style='width: 200px; text-align: center; margin: 20px 0 20px 0;'>You've chopped"
+    		+ " <strong>0</strong> logs so far.<br>That's <strong>0</strong> arrow shafts.</div></html>");
        label.setFont(new Font("Arial", Font.PLAIN, 14));
        label.setForeground(Color.black);
        label.setHorizontalAlignment( SwingConstants.CENTER );
        
-       label2 = new JLabel("<html><center>Status: Starting...</center></html>");
+       label2 = new JLabel("<html><div style='width: 200px; text-align: center; margin-bottom: 20px;'>Status: Starting...</div></html>");
        label2.setFont(new Font("Arial", Font.PLAIN, 14));
        label2.setForeground(Color.black);
        label2.setHorizontalAlignment( SwingConstants.CENTER );
        
-       timel = new JLabel("<html><center>Time: 0<br>Logs per hour: 0</center></html>");
+       timel = new JLabel("<html><div style='width: 200px; text-align: center; margin-bottom: 20px;'>Time(h:m:s): 0"
+       		+ "<br>Logs per hour: 0</div></html>");
        timel.setFont(new Font("Arial", Font.PLAIN, 14));
        timel.setForeground(Color.black);
        timel.setHorizontalAlignment( SwingConstants.CENTER );
@@ -50,49 +52,55 @@ public class Stats extends JFrame {
        panel.getContentPane().add(timel);
        panel.getContentPane().add(label2);
        
-       panel.setLocationRelativeTo(null);
+       panel.setLocation(150,150);
        panel.pack();
-       panel.setSize(300,350);
        panel.setVisible(true);
-       
-       
+         
        Timer timer = new Timer();
        startTime = System.currentTimeMillis();
        
        timer.scheduleAtFixedRate(new TimerTask() {
     	   @Override
     	   public void run() {
-    		   timel.setText("<html><center>Time: "
-    				   + (float)Math.round((System.currentTimeMillis() - startTime)/10)/100
-    				   + "<br>Logs per hour: " + (float)Math.round(logs / ((System.currentTimeMillis() - startTime) / 1000 / 60 / 60))
-    				   + "</center></html>");
+    		   
+    		   	long longVal = (long) (System.currentTimeMillis() - startTime) / 1000;
+
+    		    int hours = (int) longVal / 3600;
+    		    int remainder = (int) longVal - hours * 3600;
+    		    int mins = remainder / 60;
+    		    remainder = remainder - mins * 60;
+    		    int secs = remainder;
+    		   
+    		    timel.setText("<html><div style='width: 200px; text-align: center; margin-bottom: 20px;'>Time(h:m:s): "
+    				   + hours + ":" + mins + ":" + secs
+    				   + "<br>Logs per hour: " + (float)Math.round(logs / ((System.currentTimeMillis() - startTime) / 1000 / 60 / 60)) 
+    				   + "</div></html>");
     	   }
     	 }, 100, 100);
        
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         
-    	//javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            //public void run() {
+    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
             	createWindow();
-            //}
-       // });
-    	
-    	
-    }
+            }
+        });
+	
+    }*/
     
     public void addLog(int l){
     	
     	logs = l;
-    	label.setText("<html><center>You've done chopped " + (logs - 1) + " logs so far<br>"
-           		+ "That's " + ((logs * 15) - 15) + " arrow shafts</center></html>");
+    	label.setText("<html><div style='width: 200px; text-align: center; margin: 20px 0 20px 0;'>You've chopped <strong>"
+    		+ logs + "</strong> logs so far.<br>That's <strong>" + (logs * 15) + "</strong> arrow shafts.</div></html>");
     
     }//update the logs counter
     
     public void setStatus(String s){
     	
-    	label2.setText("<html><center>Status: " + s + "</center></html>");
+    	label2.setText("<html><div style='width: 200px; text-align: center; margin-bottom: 20px;'>Status: " + s + "</div></html>");
 
     }//update the status
 }

@@ -9,11 +9,11 @@ public class Chop extends Task{
 	private int logId = 1511;
 	private int lastCheck;
 	private Stats statsWindow;
+	private boolean init = false;
 	
 	public Chop(ClientContext ctx, Stats s) {
 		super(ctx);
 		c = ctx;
-		lastCheck = c.backpack.id(logId).count();
 		statsWindow = s;
 	}
 
@@ -36,14 +36,16 @@ public class Chop extends Task{
 	@Override
 	public void execute() {
 		
-		if(c.backpack.id(logId).count() > lastCheck){
-			lastCheck = c.backpack.id(logId).count();
-			logs++;
-			statsWindow.addLog(logs);
-		}//update the log counter
-		else if(c.backpack.id(logId).count() != lastCheck){
-			lastCheck = c.backpack.id(logId).count();
-		}//check if inventory was emptied
+		if(init){
+			if(c.backpack.id(logId).count() > lastCheck){
+				logs += c.backpack.id(logId).count() - lastCheck;
+				lastCheck = c.backpack.id(logId).count();
+				statsWindow.addLog(logs);
+			}//update the log counter
+			else if(c.backpack.id(logId).count() != lastCheck){
+				lastCheck = c.backpack.id(logId).count();
+			}//check if inventory was emptied
+		} else { logs = 0; lastCheck = c.backpack.id(logId).count() + 1; logs++; init=true; }
 		
 		GameObject tree = c.objects.nearest().poll();
 		if (tree.inViewport() && tree.id() != 38731) {
@@ -76,9 +78,6 @@ public class Chop extends Task{
             pause(800);
             
         }
-		
-		
-		
 		
 	}
 
